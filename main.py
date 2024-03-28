@@ -10,8 +10,8 @@ warnings.filterwarnings("ignore")  # Suppress warnings
 # Load data
 data = pd.read_csv("data.csv")
 data = data.drop(data.index[200:], axis=0).dropna()  # Remove NaN values
-X = data.drop(["Valentine_Date"], axis=1)  # Features
-y = data["Valentine_Date"]  # Target variable
+X = data.drop(["TenYearCHD"], axis=1)  # Features
+y = data["TenYearCHD"]  # Target variable
 
 # Split data
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=10)  # Train-test split
