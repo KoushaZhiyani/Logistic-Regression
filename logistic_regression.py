@@ -11,7 +11,7 @@ class LogisticReg:
         self.len_columns = None  # Number of columns in the dataset
         self.X = None  # Input features
         self.y = None  # Target variable
-        self.loop_check = False # Flag indicating whether the random step generation loop has been repeated 5 times
+        self.loop_check = False  # Flag indicating whether the random step generation loop has been repeated 5 times
         self.done_situation = False  # Flag indicating if convergence check is complete
         self.minimum_gradient = []  # List to store minimum gradients
         self.focus = focus  # Number of focus points for optimization
@@ -21,7 +21,9 @@ class LogisticReg:
         self.X, self.y = X_tr, y_tr  # Set the training data
         self.len_columns = len(self.X.columns)  # Calculate the number of columns
         for col in range(self.len_columns):
-            self.col_index, self.done_situation = col, False  # Initialize column index and convergence flag
+            print("yo")
+            self.col_index, self.done_situation, self.loop_check = col, False, False
+            # Initialize column index and convergence flag
             start_step = self.find_initial_step()  # Find the initial step for optimization
             self.update_minimum_gradient(start_step)  # Update minimum gradient
 
@@ -37,8 +39,8 @@ class LogisticReg:
 
     def calculate_function_minimum(self, i, position="", first_step_check=False, loop_check=0):
         # Calculate the function minimum for a given step
-        if loop_check == 5 or self.loop_check == True:
-            self.loop_check = True  
+        if loop_check == 5 or self.loop_check:
+            self.loop_check = True
             return  # Exit if loop limit is reached
         status, total, counter = [], 0, 0  # Initialize status, total, counter
 
@@ -71,7 +73,9 @@ class LogisticReg:
     def update_minimum_gradient(self, start):
         # Update the minimum gradient recursively
         previous_step = self.calculate_function_minimum(start[0] - 1, position="previous_step")
+        self.loop_check = False
         next_step = self.calculate_function_minimum(start[0] + 1, position="next_step")
+        self.loop_check = False
         self.check_convergence(previous_step, start, next_step)
 
     def check_convergence(self, pre, main, nxt):
@@ -79,25 +83,19 @@ class LogisticReg:
         self.done_situation = False  # Reset convergence flag
 
         if type(pre) == int and type(nxt) == int:
-            domain = [main[0] - 1, main[0] + 1]  # Define domain for updating pixel values
-            self.done_situation = True  # Set convergence flag
-            self.update_pixel_values(domain)  # Update pixel values
+            self.set_domain(main)
             return
 
         if type(pre) == int or type(nxt) == int:
             if type(pre) == int:
                 if nxt[1] <= main[1]:
-                    domain = [main[0] - 1, main[0] + 1]  # Define domain for updating pixel values
-                    self.done_situation = True  # Set convergence flag
-                    self.update_pixel_values(domain)  # Update pixel values
+                    self.set_domain(main)  # Set domain for updating pixel values
                     return
                 else:
                     self.update_minimum_gradient(nxt)
             else:
                 if pre[1] <= main[1]:
-                    domain = [main[0] - 1, main[0] + 1]  # Define domain for updating pixel values
-                    self.done_situation = True  # Set convergence flag
-                    self.update_pixel_values(domain)  # Update pixel values
+                    self.set_domain(main)  # Set domain for updating pixel values
                     return
                 else:
                     self.update_minimum_gradient(pre)
@@ -105,14 +103,18 @@ class LogisticReg:
             return
 
         if main[1] >= nxt[1] and main[1] >= pre[1]:
-            domain = [main[0] - 1, main[0] + 1]  # Define domain for updating pixel values
-            self.done_situation = True  # Set convergence flag
-            self.update_pixel_values(domain)  # Update pixel values
+            self.set_domain(main)  # Set domain for updating pixel values
             return
+
         if pre[1] >= main[1] and pre[1] >= nxt[1]:
             self.update_minimum_gradient(pre)
         else:
             self.update_minimum_gradient(nxt)
+
+    def set_domain(self, main_num):  # Set domain for updating pixel values
+        domain = [main_num[0] - 1, main_num[0] + 1]  # Define domain for updating pixel values
+        self.done_situation = True  # Set convergence flag
+        self.update_pixel_values(domain)  # Update pixel values
 
     def update_pixel_values(self, domain):
         # Update pixel values during optimization
