@@ -11,6 +11,7 @@ class LogisticReg:
         self.len_columns = None  # Number of columns in the dataset
         self.X = None  # Input features
         self.y = None  # Target variable
+        self.loop_check = False # The flag indicates whether the loop has been repeated 5 times
         self.done_situation = False  # Flag indicating if convergence check is complete
         self.minimum_gradient = []  # List to store minimum gradients
         self.focus = focus  # Number of focus points for optimization
@@ -28,6 +29,7 @@ class LogisticReg:
         # Find the initial step for optimization
         while True:
             i = randint(-100, 100)  # Generate a random integer
+            self.loop_check = False
             result = self.calculate_function_minimum(i, first_step_check=True)  # Calculate function minimum
             if result != 0:
                 break  # Exit loop if result is not zero
@@ -35,7 +37,8 @@ class LogisticReg:
 
     def calculate_function_minimum(self, i, position="", first_step_check=False, loop_check=0):
         # Calculate the function minimum for a given step
-        if loop_check == 5:
+        if loop_check == 5 or self.loop_check == True:
+            self.loop_check = True  # Reset loop flag
             return  # Exit if loop limit is reached
         status, total, counter = [], 0, 0  # Initialize status, total, counter
 
@@ -53,7 +56,7 @@ class LogisticReg:
                 total += log(1 - point)  # Update total
 
         if counter == 0:
-            status = (i, total, counter)  # Set status if counter is zero
+            status = (i, total)  # Set status if counter is zero
         elif counter != 0 and not first_step_check:
             if position == "previous_step":
                 self.calculate_function_minimum(i - 1, position="previous_step", loop_check=loop_check + 1)
