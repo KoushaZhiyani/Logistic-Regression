@@ -29,7 +29,7 @@ class LogisticReg:
         # Find the initial step for optimization
         while True:
             i = randint(-100, 100)  # Generate a random integer
-            self.loop_check = False
+            self.loop_check = False  # Reset loop flag
             result = self.calculate_function_minimum(i, first_step_check=True)  # Calculate function minimum
             if result != 0:
                 break  # Exit loop if result is not zero
@@ -38,7 +38,7 @@ class LogisticReg:
     def calculate_function_minimum(self, i, position="", first_step_check=False, loop_check=0):
         # Calculate the function minimum for a given step
         if loop_check == 5 or self.loop_check == True:
-            self.loop_check = True  # Reset loop flag
+            self.loop_check = True  
             return  # Exit if loop limit is reached
         status, total, counter = [], 0, 0  # Initialize status, total, counter
 
