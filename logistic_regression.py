@@ -11,7 +11,7 @@ class LogisticReg:
         self.len_columns = None  # Number of columns in the dataset
         self.X = None  # Input features
         self.y = None  # Target variable
-        self.loop_check = False # The flag indicates whether the loop has been repeated 5 times
+        self.loop_check = False # Flag indicating whether the random step generation loop has been repeated 5 times
         self.done_situation = False  # Flag indicating if convergence check is complete
         self.minimum_gradient = []  # List to store minimum gradients
         self.focus = focus  # Number of focus points for optimization
