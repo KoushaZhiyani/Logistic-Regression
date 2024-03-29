@@ -73,9 +73,9 @@ class LogisticReg:
     def update_minimum_gradient(self, start):
         # Update the minimum gradient recursively
         previous_step = self.calculate_function_minimum(start[0] - 1, position="previous_step")
-        self.loop_check = False
+        self.loop_check = False  # Reset loop_check flag
         next_step = self.calculate_function_minimum(start[0] + 1, position="next_step")
-        self.loop_check = False
+        self.loop_check = False  # Reset loop_check flag
         self.check_convergence(previous_step, start, next_step)
 
     def check_convergence(self, pre, main, nxt):
@@ -83,7 +83,7 @@ class LogisticReg:
         self.done_situation = False  # Reset convergence flag
 
         if type(pre) == int and type(nxt) == int:
-            self.set_domain(main)
+            self.set_domain(main)  # Set domain for updating pixel values
             return
 
         if type(pre) == int or type(nxt) == int:
