@@ -1,3 +1,4 @@
+! it is not complete
 import pandas as pd
 from logistic_regression import LogisticReg
 from sklearn.model_selection import train_test_split
